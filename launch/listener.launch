@@ -1,0 +1,10 @@
+<launch>
+  <arg name="model" />
+  <arg name="gui" default="true" />
+
+  <param name="robot_description" textfile="$(find orion5)/urdf/orion5.urdf" />
+  <param name="use_gui" value="$(arg gui)"/>
+
+  <node name="orion5_joint_listener" pkg="orion5" type="orion5_joint_listener.py"/>	
+
+</launch>

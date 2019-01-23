@@ -1,0 +1,49 @@
+<launch>
+
+  <!-- This has been copied from the moveit_wizard launch folder. I want to modify it so that instead of launching rviz, it launches a movegroup interface psx.py -->
+  
+  <arg name="db" default="false" />
+  <arg name="db_path" default="$(find moveit_wizard)/default_warehouse_mongo_db" />
+
+  
+  <arg name="debug" default="false" />
+  <arg name="use_gui" default="false" />
+
+  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <include file="$(find moveit_wizard)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+  </include>
+
+
+ 
+  <!-- We do not have a robot connected, so publish fake joint states -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="$(arg use_gui)"/>
+    <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+  </node>
+
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+  <!-- Launch the node that sends joint commands to the orion5-->
+  <node name="orion5_joint_listener" pkg="orion5" type="orion5_joint_listener.py"/>
+
+  <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
+  <include file="$(find moveit_wizard)/launch/move_group.launch">
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="fake_execution" value="true"/>
+    <arg name="info" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <!--  Do not run Rviz -->
+  <!--<include file="$(find moveit_wizard)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>-->
+
+  <!-- Run the movegroup command interface node. This replaces Rviz.
+  <node name="psx" pkg="orion5" type="psx.py"/>-->
+
+
+</launch>
