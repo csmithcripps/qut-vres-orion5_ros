@@ -5,7 +5,6 @@
 import rospy
 from sensor_msgs.msg import JointState
 import serial.tools.list_ports
-from General import ComQuery
 from math import pi
 from math import degrees
 # import Orion5

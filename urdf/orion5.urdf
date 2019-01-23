@@ -12,7 +12,7 @@
     <link name="base_link">
       <visual>
         <geometry>
-          <mesh filename="package://orion5/urdf/stl/base_link_SCALED.stl"/>
+          <mesh filename="package://ros_orion5/urdf/stl/base_link_SCALED.stl"/>
         </geometry>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <material name="grey"/>
@@ -30,7 +30,7 @@
     <link name="turret">
       <visual>
         <geometry>
-          <mesh filename="package://orion5/urdf/stl/turret_scaled_translated.stl"/>
+          <mesh filename="package://ros_orion5/urdf/stl/turret_scaled_translated.stl"/>
         </geometry>
         <material name="grey"/>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -49,7 +49,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://orion5/urdf/stl/bicep_SCALED.stl"/>
+          <mesh filename="package://ros_orion5/urdf/stl/bicep_SCALED.stl"/>
         </geometry>
         <material name="grey"/>
       </visual>
@@ -66,7 +66,7 @@
     <link name="forearm">
       <visual>
         <geometry>
-          <mesh filename="package://orion5/urdf/stl/forearm_SCALED.stl"/>
+          <mesh filename="package://ros_orion5/urdf/stl/forearm_SCALED.stl"/>
         </geometry>
         <material name="grey"/>
       </visual>
@@ -83,7 +83,7 @@
     <link name="hand">
       <visual>
         <geometry>
-          <mesh filename="package://orion5/urdf/stl/hand_SCALED.stl"/>
+          <mesh filename="package://ros_orion5/urdf/stl/hand_SCALED.stl"/>
         </geometry>
         <material name="grey"/>
       </visual>
@@ -100,7 +100,7 @@
     <link name="gripper1">
       <visual>
         <geometry>
-          <mesh filename="package://orion5/urdf/stl/gripper1_SCALED.stl"/>
+          <mesh filename="package://ros_orion5/urdf/stl/gripper1_SCALED.stl"/>
         </geometry>
         <material name="grey"/>
       </visual>
@@ -118,7 +118,7 @@
     <link name="gripper2">
       <visual>
         <geometry>
-          <mesh filename="package://orion5/urdf/stl/gripper2_SCALED.stl"/>
+          <mesh filename="package://ros_orion5/urdf/stl/gripper2_SCALED.stl"/>
         </geometry>
         <material name="grey"/>
       </visual>

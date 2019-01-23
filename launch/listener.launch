@@ -5,6 +5,6 @@
   <param name="robot_description" textfile="$(find ros_orion5)/urdf/orion5.urdf" />
   <param name="use_gui" value="$(arg gui)"/>
 
-  <node name="orion5_joint_listener" pkg="ros_orion5" type="orion5_joint_listener.py"/>	
+  <node name="orion5_joint_listener" pkg="ros_orion5" type="orion5_joint_listener.py"/>
 
 </launch>
