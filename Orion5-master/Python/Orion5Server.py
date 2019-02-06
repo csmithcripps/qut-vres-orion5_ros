@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import time
 import copy
 import socket
@@ -11,6 +13,7 @@ import datetime as dt
 
 import orion5
 import orion5.utils as utils
+
 
 
 def write_debug(tag, message):
@@ -258,11 +261,9 @@ class Flag(object):
             self.flag = 0
 
 
-parser = argparse.ArgumentParser(description='Orion5 Server', epilog='By default the server will connect to whatever Orion5 is plugged in')
-parser.add_argument('--simulator', dest='simulator', action='store_const',
-    const=True, default=False, help='Set this flag to enter simulator mode first, and you control the serial connection from client side.')
-args = parser.parse_args()
-
+class argument():
+    simulator = False
+args = argument()
 
 socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -279,7 +280,7 @@ threads = []
 running = True
 
 try:
-
+    # rospy.init_node('orion5_server', anonymous=True)
     while running:
         # check every second for new sockets trying to connect
         ready, _, _ = select.select([socket_server], [], [], 0.25)

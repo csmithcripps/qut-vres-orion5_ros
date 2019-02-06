@@ -1,0 +1,17 @@
+<launch>
+  <arg name="model" />
+  <arg name="gui" default="False" />
+  <arg name="source" default="joint_vals" />
+
+  <param name="robot_description" textfile="$(find ros_orion5)/urdf/orion5.urdf" />
+  <rosparam param="source_list">["joint_vals"] </rosparam>
+  <param name="use_gui" value="$(arg gui)"/>
+
+
+  <!-- <node name="orion5_joint_state_publisher" pkg="ros_orion5" type="orion5_joint_state_publisher.py" required="true" /> -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ros_orion5)/rviz/urdf.rviz" required="true" />
+
+
+</launch>

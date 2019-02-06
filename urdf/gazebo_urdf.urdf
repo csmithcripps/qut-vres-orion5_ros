@@ -1,0 +1,190 @@
+<?xml version="1.0" ?>
+<robot name="orion5">
+    <material name="grey">
+        <color rgba="0.25 0.37 0.48 1" />
+    </material>
+    <material name="invisible">
+        <color rgba="0.6 0.2 0.48 0" />
+    </material>
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://ros_orion5/urdf/stl/base_link_SCALED.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+    <joint name="base_servo" type="revolute">
+        <parent link="base_link" />
+        <child link="turret" />
+        <origin xyz="0 0 0.018" rpy="0 0 3.14" />
+        <axis xyz="0 0 -1" />
+        <limit effort="30" velocity="1.0" lower="0.0" upper="6.28" />
+    </joint>
+    <link name="turret">
+        <visual>
+            <geometry>
+                <mesh filename="package://ros_orion5/urdf/stl/turret_scaled_translated.stl" />
+            </geometry>
+            <material name="grey" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </visual>
+    </link>
+    <joint name="shoulder" type="revolute">
+        <parent link="turret" />
+        <child link="bicep" />
+        <origin xyz="-0.030309 0 0.033 " rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="0.1" upper="2.1" />
+    </joint>
+    <link name="bicep">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://ros_orion5/urdf/stl/bicep_SCALED.stl" />
+            </geometry>
+            <material name="grey" />
+        </visual>
+    </link>
+    <joint name="elbow" type="revolute">
+        <parent link="bicep" />
+        <child link="forearm" />
+        <limit effort="30" velocity="1.0" lower="0.349066" upper="5.93412" />
+        <origin xyz="-0.17384 0 0" rpy="0 3.14 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <link name="forearm">
+        <visual>
+            <geometry>
+                <mesh filename="package://ros_orion5/urdf/stl/forearm_SCALED.stl" />
+            </geometry>
+            <material name="grey" />
+        </visual>
+    </link>
+    <joint name="wrist" type="revolute">
+        <parent link="forearm" />
+        <child link="hand" />
+        <limit effort="30" velocity="1.0" lower="0.785398" upper="5.49779" />
+        <origin xyz="-0.136307 0 0" rpy="0 3.14 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <link name="hand">
+        <visual>
+            <geometry>
+                <mesh filename="package://ros_orion5/urdf/stl/hand_SCALED.stl" />
+            </geometry>
+            <material name="grey" />
+        </visual>
+    </link>
+    <joint name="claw" type="prismatic">
+        <parent link="hand" />
+        <child link="gripper1" />
+        <limit effort="30" velocity="1.0" lower="0.01" upper="0.04" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <axis xyz="0 -1 0" />
+    </joint>
+    <link name="gripper1">
+        <visual>
+            <geometry>
+                <mesh filename="package://ros_orion5/urdf/stl/gripper1_SCALED.stl" />
+            </geometry>
+            <material name="grey" />
+        </visual>
+    </link>
+    <joint name="claw2" type="prismatic">
+        <parent link="hand" />
+        <child link="gripper2" />
+        <limit effort="30" velocity="1.0" lower="0.01" upper="0.04" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+        <mimic joint="claw" multiplier="1" offset="0" />
+    </joint>
+    <link name="gripper2">
+        <visual>
+            <geometry>
+                <mesh filename="package://ros_orion5/urdf/stl/gripper2_SCALED.stl" />
+            </geometry>
+            <material name="grey" />
+        </visual>
+    </link>
+    <joint name="phantom_tooltip_joint" type="fixed">
+        <parent link="hand" />
+        <child link="grasp_point" />
+        <origin xyz="-0.12 0 0" rpy="0 -1.5708 0" />
+    </joint>
+    <link name="grasp_point">
+        <visual>
+            <geometry>
+                <sphere radius="0.005" />
+            </geometry>
+            <material name="invisible" />
+        </visual>
+    </link>
+
+<transmission name="trans_base_servo">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_servo">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_servo_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_shoulder">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="shoulder">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="shoulder_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_elbow">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="elbow">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="elbow_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_wrist">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="wrist">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="wrist_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_claw">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="claw">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="claw_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_claw2">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="claw2">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="claw2_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>
+</robot>

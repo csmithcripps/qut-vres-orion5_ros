@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
-# Author: Jenna Riseley 2017
-
 import rospy
 from sensor_msgs.msg import JointState
+from std_msgs.msg import Header
 import serial.tools.list_ports
 from math import pi
-from math import degrees
+from math import degrees, radians
 # import Orion5
 import orion5
 from orion5 import orion5_math
@@ -15,6 +14,29 @@ import time
 
 NUM_JOINTS = 5
 joints = {'base_servo':0, 'shoulder':1, 'elbow': 2, 'wrist': 3, 'claw': 4}
+
+
+class joint_state_publisher():
+    pub = rospy.Publisher('joint_vals', JointState, queue_size=10)
+    # Create a JointState variable
+    pose = JointState()
+    pose.header = Header()
+    pose.name = ['base_servo', 'shoulder', 'elbow', 'wrist', 'claw']
+    pose.velocity = []
+    pose.effort = []
+    # Publish message and wait 5 second for the robot to run
+    def publishJointState(self):
+        joint_values = orion.getAllJointsPosition()
+        for i in range(len(joints)):
+            joint_values[i] = radians(joint_values[i])
+        joint_values[joints['claw']] = (joint_values[joints['claw']])/10000 + 0.01
+        self.pose.position = joint_values
+        self.pose.header.stamp = rospy.Time.now()
+        self.pub.publish(self.pose)
+
+def pub_callback(data):
+    publisher.publishJointState()
+
 
 def callback(data):
 
@@ -83,57 +105,36 @@ def callback(data):
                   ]
 
         orion.setAllJointsPosition(jointValues)
-
     except KeyboardInterrupt:
 
-        quit()
         rospy.signal_shutdown('Keyboard interrupt')
+        quit()
 
 def listener():
+    while not rospy.is_shutdown():
+        try:
+            rospy.init_node('orion5_joint_listener', anonymous=True)
+            rospy.Subscriber('joint_goal', JointState, callback)
+            rospy.Timer(rospy.Duration(0.1), pub_callback)
+            publisher.publishJointState()
+            rospy.spin()
 
-    rospy.init_node('orion5_joint_listener', anonymous=True)
-    rospy.Subscriber('joint_states', JointState, callback)
+        except KeyboardInterrupt:
 
-    # keep python from exiting until the node is stopped
-    rospy.spin()
+            rospy.signal_shutdown('Keyboard interrupt')
+            quit()
 
 
 if __name__ == '__main__':
 
-    # # Instantiate orion5.py (connection with orion5 arm)
-    # comport = None
-    # print('\nSearching for Orion5...')
-    # try:
-    #     while True:
-    #         comport = ComQuery()
-    #         if comport is not None:
-    #             print('Found Orion5, serial port name:', comport.device)
-    #             break
-    #         time.sleep(2)
-    # except KeyboardInterrupt:
-    #     print('\nExiting...\n')
-    #     quit()
-    #
-    # global orion
-    # orion = Orion5.Orion5(comport.device)
-    #
-    # # Set control mode to speed
-    # # Just set to reasonable values now, maybe later do a GUI that allows
-    # # you to set this manually?
-    # for i in range(0,NUM_JOINTS-1):
-    #     orion.setJointControlMode(i,orion.POS_SPEED)
-    #     orion.setJointSpeed(i,30)
-    #
-    # # Set the gripper a bit faster
-    # orion.setJointControlMode(4,orion.POS_SPEED)
-    # orion.setJointSpeed(4,60)
-    #
-    #
-    # listener()
-
 
     global orion
+    global publisher
+    print("Initialising")
+    time.sleep(5)
+
     orion = orion5.Orion5()
+    publisher = joint_state_publisher()
     print('running listener')
 
     listener()
