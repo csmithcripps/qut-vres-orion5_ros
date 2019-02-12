@@ -13,8 +13,6 @@ from orion5 import orion5_math
 import time
 
 
-NUM_JOINTS = 5
-
 arriveThreshold = 0.01
 waitTime = 0.5
 index = 0
@@ -24,7 +22,7 @@ def arrived(desired, actual, threshold):
     diff[0] = abs((diff[0] + 180) % 360 - 180)
     return max(diff) < threshold
 
-
+# Scrapes the data from the goal message, publishes goal position
 class goal_handler():
     goal_points = []
     positions = []
@@ -62,7 +60,7 @@ class goal_handler():
         self.current_goal_position = None
         self.current_joint_state = None
 
-
+# Begins handling goal when recieved
 def goal_callback(goal):
     print("Received Goal")
     handler.goal_index = 0
@@ -70,7 +68,7 @@ def goal_callback(goal):
     handler.points_to_positions()
     handler.current_goal_position = handler.positions[0]
 
-
+# Checks the current joint state against the desired and decides what to publish
 def jointState_callback(data):
     handler.current_joint_state = data.position
     if handler.current_goal_position is not None:
